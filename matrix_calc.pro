@@ -14,9 +14,9 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    algo.cpp
+    array.cpp
 
 HEADERS  += mainwindow.h \
-    algo.h
+    array.h
 
 FORMS    += mainwindow.ui

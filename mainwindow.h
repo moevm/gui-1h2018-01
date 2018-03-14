@@ -3,7 +3,8 @@
 
 #include <QMainWindow>
 #include <QStandardItem>
-
+#include <QMessageBox>
+#include "array.h"
 
 namespace Ui {
 class MainWindow;
@@ -17,22 +18,28 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-    int m1 [6][6];
-    int m2 [6][6];
-    void out(int a);
 
 private:
 
     Ui::MainWindow *ui;
     QStandardItemModel *matr1;
     QStandardItemModel *matr2;
-
+    QStandardItemModel *m;
+    Array m1;
+    Array m2;
+    Array res;
+    void read_matr1();
+    void read_matr2();
+    void show_result();
 
 private slots:
     void on_pushButton_clicked();
-    void on_pushButton_3_clicked();
+    void on_plus_clicked();
+    void on_minus_clicked();
+   // void on_mult_clicked();
     void matr1_characteristics_changed();
     void matr2_characteristics_changed();
+
 
 };
 
