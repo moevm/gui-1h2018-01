@@ -1,7 +1,6 @@
 #include "array.h"
 
 Array::Array(){
-
 }
 
 Array::Array(int n, int m)
@@ -71,8 +70,10 @@ Array Array:: transpose() const{
             Ans.setValue(i, j, getValue(j, i));
         }
     }
-    return Ans;
+    return Ans
 }
+
+Array Array:: multiply()
 
 
 
