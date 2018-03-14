@@ -1,6 +1,7 @@
 #include "array.h"
 
 Array::Array(){
+
 }
 
 Array::Array(int n, int m)
@@ -42,11 +43,13 @@ Array Array::add_up(Array &B) const{
             }
         }
     }
+    else{
+        return nullptr;
+    }
     return A;
 }
 
-Array Array::subtruct(Array &B) const
-{
+Array Array::subtruct(Array &B) const{
     Array A(rows, colomns);
     if (rows == B.getRows() && colomns == B.getColomns()){
         for (int i = 0; i < rows; i++){
@@ -55,21 +58,21 @@ Array Array::subtruct(Array &B) const
             }
         }
     }
+    else{
+        return nullptr;
+    }
     return A;
 }
 
-//Array Array::multiply(Array &B) const
-//{
-//    float sum = 0;
-//    Array Ans;
-//    if (colomns == B.getRows()){
-//        Ans.setSize(rows, B.getColomns());
-//        for (int i = 0; i < rows; i++){
-//            for (int j = 0; j < B.getColomns(); j++){
-//                sum += getValue(i, j)*B.getValue(i, j);
-//                Ans.setValue( i, j, sum);
-//            }
-//        }
-//    }
-//    return Ans;
-//}
+Array Array:: transpose() const{
+    Array Ans(colomns, rows);
+    for (int i = 0; i < colomns; i++){
+        for (int j = 0; j < rows; j++){
+            Ans.setValue(i, j, getValue(j, i));
+        }
+    }
+    return Ans;
+}
+
+
+
