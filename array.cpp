@@ -42,13 +42,11 @@ Array Array::add_up(Array &B) const{
             }
         }
     }
-    else{
-        return nullptr;
-    }
     return A;
 }
 
-Array Array::subtruct(Array &B) const{
+Array Array::subtruct(Array &B) const
+{
     Array A(rows, colomns);
     if (rows == B.getRows() && colomns == B.getColomns()){
         for (int i = 0; i < rows; i++){
@@ -56,9 +54,6 @@ Array Array::subtruct(Array &B) const{
                 A.setValue(i, j, getValue(i, j) - B.getValue(i, j));
             }
         }
-    }
-    else{
-        return nullptr;
     }
     return A;
 }
@@ -70,10 +65,24 @@ Array Array:: transpose() const{
             Ans.setValue(i, j, getValue(j, i));
         }
     }
-    return Ans
+    return Ans;
 }
 
-Array Array:: multiply()
-
-
-
+Array Array::multiply(Array &B) const
+{
+    float sum;
+    Array Ans;
+    if (colomns == B.getRows()){
+        Ans.setSize(rows, B.getColomns());
+        for (int i = 0; i < rows; i++){
+            for (int j = 0; j < B.getColomns(); j++){
+                sum = 0;
+                for (int k = 0; k < B.getColomns() ; k++){
+                    sum += getValue(i, k)*B.getValue(k, j);
+                    Ans.setValue( i, j, sum);
+                }
+            }
+        }
+    }
+    return Ans;
+}

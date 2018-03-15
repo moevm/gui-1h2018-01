@@ -17,8 +17,8 @@ public:
     //Matrix function
     Array add_up(Array &B) const;
     Array subtruct (Array &B) const;
-//    Array multiply(Array &B) const;
-    Array transpose() const;
+    Array multiply(Array &B) const;
+     Array transpose() const;
 
 private:
     int rows;
