@@ -17,8 +17,14 @@ public:
     //Matrix function
     Array add_up(Array &B) const;
     Array subtruct (Array &B) const;
-    Array multiply(Array &B) const;
-     Array transpose() const;
+    Array multiply(Array &B) const;//**
+    Array transpose() const;//**
+    Array multiply(float c) const;//**
+    Array minor( int i, int j) const;
+    float det() const;//**
+    Array inverse() const;//to do!**
+    Array elevate(int n) const;//to do! A^n**
+    Array inv_1() const;
 
 private:
     int rows;
