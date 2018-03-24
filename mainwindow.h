@@ -31,17 +31,25 @@ private:
     void read_matr1();
     void read_matr2();
     void show_result();
+    void clean_matr();
 
 private slots:
-    void on_pushButton_clicked();
+    //кнопки операций
     void on_plus_clicked();
     void on_minus_clicked();
     void on_mult_clicked();
     void on_transpA_clicked();
     void on_transpB_clicked();
-
+    void on_powA_clicked();
+    void on_powB_clicked();
+    void on_detA_clicked();
+    void on_detB_clicked();
+    void on_reverseA_clicked();
+    void on_reverseB_clicked();
+    //изменение размеров матрицы
     void matr1_characteristics_changed();
     void matr2_characteristics_changed();
+    //выбор степени матрицы
 
 
 };

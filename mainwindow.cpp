@@ -7,21 +7,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    //ограничения на размерность матрицы
-    ui->line_1->setMaximum(5);
-    ui->line_1->setMinimum(1);
-    ui->line_2->setMaximum(5);
-    ui->line_2->setMinimum(1);
-    ui->col_1->setMaximum(5);
-    ui->col_1->setMinimum(1);
-    ui->col_2->setMaximum(5);
-    ui->col_2->setMinimum(1);
-
-    QObject::connect(ui->line_1, SIGNAL(valueChanged(int)), this, SLOT(matr1_characteristics_changed()));
-    QObject::connect(ui->col_1, SIGNAL(valueChanged(int)), this, SLOT(matr1_characteristics_changed()));
-    QObject::connect(ui->line_2, SIGNAL(valueChanged(int)), this, SLOT(matr2_characteristics_changed()));
-    QObject::connect(ui->col_2, SIGNAL(valueChanged(int)), this, SLOT(matr2_characteristics_changed()));
-
+    matr1_characteristics_changed();//создает матрицу 1х1
+    matr2_characteristics_changed();//создает матрицу 1х1
 }
 
 MainWindow::~MainWindow()
@@ -31,6 +18,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_plus_clicked()
 {
+    clean_matr();
     read_matr1();
     read_matr2();
     res = m1.add_up(m2);
@@ -84,13 +72,59 @@ void MainWindow::read_matr2()
         }
     }
 }
-void MainWindow::on_pushButton_clicked()
+
+void MainWindow::on_powA_clicked()
 {
+
+}
+void MainWindow::on_powB_clicked(){
 
 
 }
 
+void MainWindow::on_detA_clicked(){
+    clean_matr();
+    read_matr1();
+    res.setSize(1, 1);
+    res.setValue(0,0,m1.det());
+    show_result();
+}
+
+void MainWindow::on_detB_clicked(){
+    clean_matr();
+    read_matr2();
+    res.setSize(1, 1);
+    res.setValue(0,0,m2.det());
+    show_result();
+}
+
+void MainWindow::on_reverseA_clicked(){
+    clean_matr();
+    read_matr1();
+    res = m1.inverse();
+    show_result();
+}
+
+void MainWindow::on_reverseB_clicked(){
+    clean_matr();
+    read_matr2();
+    res = m2.inverse();
+    show_result();
+}
+
+void MainWindow::clean_matr(){
+    for(int i = 0;i<5;i++){
+        for(int j = 0; j<5;j++){
+           res.setValue(i,j,0);
+           m2.setValue(i,j,0);
+           m1.setValue(i,j,0);
+        }
+    }
+
+}
+
 void MainWindow::on_minus_clicked(){
+    clean_matr();
     read_matr1();
     read_matr2();
     res = m1.subtruct(m2);
@@ -98,23 +132,38 @@ void MainWindow::on_minus_clicked(){
 }
 
 void MainWindow::on_mult_clicked(){
-    read_matr1();
-    read_matr2();
-    res = m1.multiply(m2);
-    show_result();
+    clean_matr();
+    if((ui->col_1->value()==1)&&(ui->line_1->value()==1)){
+        read_matr2();
+        float pow = matr1->item(0,0)->text().toFloat();//значение 1 матрицы(числа)
+        res = m2.multiply(pow);
+        }
+    else{
+        if((ui->col_2->value()==1)&&(ui->line_2->value()==1)){
+            read_matr1();
+            float pow = matr2->item(0,0)->text().toFloat();//значение 1 матрицы(числа)
+            res = m1.multiply(pow);
+        }
+        else{
+            read_matr1();
+            read_matr2();
+            res = m1.multiply(m2);
+        }
+    }
+     show_result();
 }
 
 void MainWindow::on_transpA_clicked(){
+    clean_matr();
     read_matr1();
-    read_matr2();
     res = m1.transpose();
     show_result();
 }
 
 void MainWindow::on_transpB_clicked(){
-    read_matr1();
+    clean_matr();
     read_matr2();
-    res = m1.transpose();
+    res = m2.transpose();
     show_result();
 }
 
@@ -133,11 +182,9 @@ void MainWindow::matr1_characteristics_changed()
             matr1->setItem(i, j, item);
         }
     }
-
     ui->matr1->setModel(matr1);
     ui->matr1->resizeRowsToContents();
     ui->matr1->resizeColumnsToContents();
-
 }
 
 void MainWindow::matr2_characteristics_changed()
