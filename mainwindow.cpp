@@ -75,11 +75,18 @@ void MainWindow::read_matr2()
 
 void MainWindow::on_powA_clicked()
 {
-
+    clean_matr();
+    read_matr1();
+    int a = ui->num_powA->value();
+    res = m1.elevate(a);
+    show_result();
 }
 void MainWindow::on_powB_clicked(){
-
-
+    clean_matr();
+    read_matr2();
+    int a = ui->num_powB->value();
+    res = m2.elevate(a);
+    show_result();
 }
 
 void MainWindow::on_detA_clicked(){
