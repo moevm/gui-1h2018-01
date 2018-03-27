@@ -21,8 +21,17 @@ void MainWindow::on_plus_clicked()
     clean_matr();
     read_matr1();
     read_matr2();
-    res = m1.add_up(m2);
-    show_result();
+    int n1 = m1.getRows(), l1 = m1.getColomns(), n2 = m2.getRows(), l2 = m2.getColomns();
+    if(n1!=n2 ||l1!=l2)
+    {
+       show_error("Неверная размерность матрицы.", "Количество строк/стобцов не равны");
+    }
+    else
+    {
+       res = m1.add_up(m2);
+       show_result();
+    }
+
 }
 void MainWindow::show_result(){
      m = new QStandardItemModel;
@@ -77,46 +86,91 @@ void MainWindow::on_powA_clicked()
 {
     clean_matr();
     read_matr1();
+    int n1 = m1.getRows(), l1 = m1.getColomns();
+    if(n1!=l1)
+    {
+       show_error("Неверная размерность матрицы.", "Количество строк матрицы не равно количеству стобцов");
+    }
+    else{
     int a = ui->num_powA->value();
     res = m1.elevate(a);
     show_result();
+    }
 }
 void MainWindow::on_powB_clicked(){
     clean_matr();
     read_matr2();
+    int n1 = m2.getRows(), l1 = m2.getColomns();
+    if(n1!=l1)
+    {
+       show_error("Неверная размерность матрицы.", "Количество строк матрицы не равно количеству стобцов");
+    }
+    else{
     int a = ui->num_powB->value();
     res = m2.elevate(a);
     show_result();
+    }
 }
 
 void MainWindow::on_detA_clicked(){
     clean_matr();
     read_matr1();
-    res.setSize(1, 1);
-    res.setValue(0,0,m1.det());
-    show_result();
+    int n1 = m1.getRows(), l1 = m1.getColomns();
+    if(n1!=l1)
+    {
+       show_error("Неверная размерность матрицы.", "Количество строк матрицы не равно количеству стобцов");
+    }
+    else{
+        res.setSize(1, 1);
+        res.setValue(0,0,m1.det());
+        show_result();
+    }
+
 }
 
 void MainWindow::on_detB_clicked(){
     clean_matr();
     read_matr2();
+    int n1 = m2.getRows(), l1 = m2.getColomns();
+    if(n1!=l1)
+    {
+       show_error("Неверная размерность матрицы.", "Количество строк матрицы не равно количеству стобцов");
+    }
+    else{
     res.setSize(1, 1);
     res.setValue(0,0,m2.det());
     show_result();
+    }
+
 }
 
 void MainWindow::on_reverseA_clicked(){
     clean_matr();
     read_matr1();
-    res = m1.inverse();
-    show_result();
+    int n1 = m1.getRows(), l1 = m1.getColomns();
+    if(n1!=l1)
+    {
+       show_error("Неверная размерность матрицы.", "Количество строк матрицы не равно количеству стобцов");
+    }
+    else{
+        res = m1.inverse();
+        show_result();
+    }
+
 }
 
 void MainWindow::on_reverseB_clicked(){
     clean_matr();
     read_matr2();
-    res = m2.inverse();
-    show_result();
+    int n1 = m2.getRows(), l1 = m2.getColomns();
+    if(n1!=l1)
+    {
+       show_error("Неверная размерность матрицы.", "Количество строк матрицы не равно количеству стобцов");
+    }
+    else{
+        res = m2.inverse();
+        show_result();
+    }
 }
 
 void MainWindow::clean_matr(){
@@ -134,8 +188,16 @@ void MainWindow::on_minus_clicked(){
     clean_matr();
     read_matr1();
     read_matr2();
-    res = m1.subtruct(m2);
-    show_result();
+    int n1 = m1.getRows(), l1 = m1.getColomns(), n2 = m2.getRows(), l2 = m2.getColomns();
+    if(n1!=n2 ||l1!=l2)
+    {
+       show_error("Неверная размерность матрицы.", "Количество строк/стобцов не равны");
+    }
+    else
+    {
+       res = m1.subtruct(m2);
+       show_result();
+    }
 }
 
 void MainWindow::on_mult_clicked(){
@@ -154,7 +216,12 @@ void MainWindow::on_mult_clicked(){
         else{
             read_matr1();
             read_matr2();
-            res = m1.multiply(m2);
+            int n1 = m1.getRows(), l1 = m1.getColomns(), n2 = m2.getRows(), l2 = m2.getColomns();
+            if(l1 == n2)
+                res = m1.multiply(m2);
+            else{
+                show_error("Невозможно произвести умножение!","Количество столбцов первой матрицы не равно количеству строк второй матрицы");
+            }
         }
     }
      show_result();
@@ -214,6 +281,16 @@ void MainWindow::matr2_characteristics_changed()
     ui->matr2->resizeRowsToContents();
     ui->matr2->resizeColumnsToContents();
 
+}
+
+void MainWindow::show_error(QString er, QString ev){
+    QMessageBox msgBox;  //www.itmathrepetitor.ru
+    msgBox.setText(er);
+    msgBox.setInformativeText(ev);
+    msgBox.setStandardButtons(QMessageBox::Ok);
+    msgBox.setIcon(QMessageBox::Critical);
+    msgBox.setDefaultButton(QMessageBox::Ok);
+    msgBox.exec();
 }
 
 

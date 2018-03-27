@@ -32,6 +32,7 @@ private:
     void read_matr2();
     void show_result();
     void clean_matr();
+    void show_error(QString er, QString ev);
 
 private slots:
     //кнопки операций
