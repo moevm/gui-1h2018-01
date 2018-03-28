@@ -1,4 +1,5 @@
 #include "array.h"
+#include <QDebug>
 
 Array::Array(){
 }
@@ -79,7 +80,7 @@ Array Array::multiply(Array &B) const
                 sum = 0;
                 for (int k = 0; k <= B.getColomns()+1 ; k++){
                     sum += getValue(i, k)*B.getValue(k, j);
-                    Ans.setValue( i, j, sum);
+                    qDebug() << getValue(i, k);
                 }
             }
         }
@@ -142,6 +143,9 @@ float Array::det() const
         {
             sum = sum + ((getValue(0,0) * getValue(1,1)) - (getValue(1,0) * getValue(0,1)));
         }
+        if(rows == 1){
+            sum = getValue(0, 0);
+        }
         return sum;
     }
 }
@@ -191,17 +195,32 @@ Array Array:: elevate( int n) const
     if(rows == colomns){
         float sum;
         Array Ans;
-        for (int l = 0; l < n; l++){
-            Ans.setSize(rows, colomns);
+        Array tmp;
+        tmp.setSize(rows, colomns);
+        Ans.setSize(rows, colomns);
+        for (int i = 0; i < rows; i++){
+            for (int j = 0; j < colomns; j++){
+                 Ans.setValue(i, j, getValue(i, j));
+                 qDebug() <<  Ans.getValue(i, j);
+            }
+        }
+        for( int l = 0; l < (n-1); l++){
+            tmp = Ans;
             for (int i = 0; i < rows; i++){
-                for (int j = 0; j < getColomns(); j++){
+                for (int j = 0; j < colomns; j++){
                     sum = 0;
-                    for (int k = 0; k <= getColomns()+1 ; k++){
-                        sum += getValue(i, k)*getValue(k, j);
+                    for (int k = 0; k < colomns ; k++){
+                        //qDebug() << "for k";
+                        sum += tmp.getValue(i, k)*getValue(k, j);
+                        qDebug() << "tmp" << tmp.getValue(i, k);
+                        qDebug() << "A" << getValue(k, j);
+                       // qDebug() << "sum" << sum;
                         Ans.setValue( i, j, sum);
+                        qDebug() << Ans.getValue(i, j);
                     }
                 }
             }
+
         }
      return Ans;
     }
