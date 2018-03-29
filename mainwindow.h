@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QStandardItem>
 #include <QMessageBox>
+#include <QDebug>
 #include "array.h"
 
 namespace Ui {
@@ -28,6 +29,10 @@ private:
     Array m1;
     Array m2;
     Array res;
+    Array m1_er;
+    Array m2_er;
+    bool is_ok1=true;
+    bool is_ok2=true;
     void read_matr1();
     void read_matr2();
     void show_result();

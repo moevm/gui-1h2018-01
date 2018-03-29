@@ -78,7 +78,7 @@ Array Array::multiply(Array &B) const
         for (int i = 0; i < rows; i++){
             for (int j = 0; j < B.getColomns(); j++){
                 sum = 0;
-                for (int k = 0; k <= B.getColomns(); k++){
+                for (int k = 0; k < colomns; k++){
                     sum += getValue(i, k)*B.getValue(k, j);
                     Ans.setValue(i, j, sum);
                  }
@@ -87,6 +87,7 @@ Array Array::multiply(Array &B) const
     }
     return Ans;
 }
+
 //умножение на константу
 Array Array::multiply(float c) const
 {
