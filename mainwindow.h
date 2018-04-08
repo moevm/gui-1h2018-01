@@ -55,9 +55,8 @@ private slots:
     //изменение размеров матрицы
     void matr1_characteristics_changed();
     void matr2_characteristics_changed();
-    //выбор степени матрицы
-
-
+    //сохранение
+    void on_save_clicked();
 };
 
 #endif // MAINWINDOW_H

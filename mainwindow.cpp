@@ -1,6 +1,10 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "writer.h"
+#include <iostream>
 
+
+writer w;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -30,6 +34,7 @@ void MainWindow::on_plus_clicked()
         {
             res = m1.add_up(m2);
             show_result();
+            w.write_result("add_up",m1,m2,res);
         }
     }
 }
@@ -259,12 +264,12 @@ void MainWindow::on_minus_clicked(){
         {
             res = m1.subtruct(m2);
             show_result();
+            w.write_result("substruct",m1,m2,res);
         }
     }
 }
 
 void MainWindow::on_mult_clicked(){
-
     clean_matr();
     read_matr1();
     read_matr2();
@@ -287,6 +292,7 @@ void MainWindow::on_mult_clicked(){
                 {
                     res = m1.multiply(m2);
                     show_result();
+                    w.write_result("mult",m1,m2,res);
                 }
                 else
                 {
@@ -315,7 +321,10 @@ void MainWindow::on_transpB_clicked(){
     if(is_ok2){
         res = m2.transpose();
         show_result();
-    }
+     }
+}
+void MainWindow::on_save_clicked(){//типо закончили работу и сохраняеи все дерьмо что наделали
+        w.delete_files();
 }
 
 void MainWindow::matr1_characteristics_changed()

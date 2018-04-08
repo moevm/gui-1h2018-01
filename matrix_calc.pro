@@ -14,9 +14,11 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    array.cpp
+    array.cpp \
+    writer.cpp
 
 HEADERS  += mainwindow.h \
-    array.h
+    array.h \
+    writer.h
 
 FORMS    += mainwindow.ui
