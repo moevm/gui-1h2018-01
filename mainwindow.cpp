@@ -34,7 +34,7 @@ void MainWindow::on_plus_clicked()
         {
             res = m1.add_up(m2);
             show_result();
-            w.write_result("add_up",m1,m2,res);
+            w.write_result("+",m1,m2,res);
         }
     }
 }
@@ -264,7 +264,7 @@ void MainWindow::on_minus_clicked(){
         {
             res = m1.subtruct(m2);
             show_result();
-            w.write_result("substruct",m1,m2,res);
+            w.write_result("-",m1,m2,res);
         }
     }
 }
@@ -292,7 +292,7 @@ void MainWindow::on_mult_clicked(){
                 {
                     res = m1.multiply(m2);
                     show_result();
-                    w.write_result("mult",m1,m2,res);
+                    w.write_result("*",m1,m2,res);
                 }
                 else
                 {

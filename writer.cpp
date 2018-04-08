@@ -12,9 +12,10 @@ writer::writer()//в конструктор подадим путь пользо
     tk=localtime(&t);
     QString p;
     //пишем путь до файла tex
-    QString l = QString::number(tk->tm_mday).append(".")
+    QString l = QString::number(tk->tm_hour).append("_").append(QString::number(tk->tm_min))
+            .append(QString::number(tk->tm_mday)).append(".")
             .append(QString::number(tk->tm_mon+1))
-            .append(".").append(QString::number(1990+tk->tm_year));
+            .append(".").append(QString::number(1900+tk->tm_year));
     l.push_front("Z:\\calc_result\\");
     p=l;
     L_filename=l.append(".tex");
@@ -31,15 +32,15 @@ void writer::write_result(QString name, Array A, Array B, Array result)//пок�
     file_T<<"hjh";
 
 //операция на 2 матрицы в латех
-    file_L<<write_matr_to_lat("A",A).toStdString();
-    file_L<<write_matr_to_lat("B",B).toStdString();
-    file_L<<write_matr_to_lat("Result",result).toStdString();
-
+    file_L<<"$\n"<<write_matr_to_lat(A).toStdString();
+    file_L<<name.toStdString()<<"\n";
+    file_L<<write_matr_to_lat(B).toStdString();
+    file_L<<"=\n";
+    file_L<<write_matr_to_lat(result).toStdString()<<"$\n\\\\\n";
 }
 
-QString writer::write_matr_to_lat(QString let, Array A){//запись матриц в латехе
-    QString M ="\\[";
-    M.append(let).append("=\n\\begin{pmatrix}\n");
+QString writer::write_matr_to_lat(Array A){//запись матриц в латехе
+    QString M ="\\begin{pmatrix}\n";
     for(int i = 0;i<A.getRows();i++)
     {
         for(int j = 0; j<A.getColomns();j++)
@@ -50,7 +51,7 @@ QString writer::write_matr_to_lat(QString let, Array A){//запись матр�
         }
         M.append("\\\\");
     }
-    M.append("\\end{pmatrix}\n\\]");
+    M.append("\\end{pmatrix}\n");
     return M;
 }
 
