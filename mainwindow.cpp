@@ -145,6 +145,7 @@ void MainWindow::on_powA_clicked()
             int a = ui->num_powA->value();
             res = m1.elevate(a);
             show_result();
+            w.writePow(a, m1, res);
         }
     }
 }
@@ -159,6 +160,7 @@ void MainWindow::on_powB_clicked(){
             int a = ui->num_powB->value();
             res = m2.elevate(a);
             show_result();
+            w.writePow(a, m1, res);
         }
     }
 }
@@ -175,6 +177,7 @@ void MainWindow::on_detA_clicked(){
             res.setSize(1, 1);
             res.setValue(0,0,m1.det());
             show_result();
+            w.write_result("det", m1, m2, res);
         }
     }
 
@@ -191,6 +194,7 @@ void MainWindow::on_detB_clicked(){
             res.setSize(1, 1);
             res.setValue(0,0,m2.det());
             show_result();
+            w.write_result("det", m1, m2, res);
         }
     }
 }
@@ -206,8 +210,9 @@ void MainWindow::on_reverseA_clicked(){
             if(m1.det()==0)
                 show_error("Обратной матрицы не существует.", "Определитель матрицы равен 0");
             else{
-                res = m1.inverse();
+                res = m1.inverse();                
                 show_result();
+                w.write_result("{-1}", m1, m2, res);
             }
         }
     }
@@ -228,6 +233,7 @@ void MainWindow::on_reverseB_clicked(){
             }else{
                 res = m2.inverse();
                 show_result();
+                w.write_result("{-1}", m1, m2, res);
             }
 
         }
@@ -264,7 +270,7 @@ void MainWindow::on_minus_clicked(){
         {
             res = m1.subtruct(m2);
             show_result();
-            w.write_result("-",m1,m2,res);
+            w.write_result("-", m1, m2, res);
         }
     }
 }
@@ -312,6 +318,7 @@ void MainWindow::on_transpA_clicked(){
     {
         res = m1.transpose();
         show_result();
+        w.write_result("T", m1, m2, res);
     }
 }
 
@@ -321,6 +328,7 @@ void MainWindow::on_transpB_clicked(){
     if(is_ok2){
         res = m2.transpose();
         show_result();
+        w.write_result("T", m1, m2, res);
      }
 }
 void MainWindow::on_save_clicked(){//типо закончили работу и сохраняеи все дерьмо что наделали
@@ -386,5 +394,3 @@ void MainWindow::show_error(QString er, QString ev){
     ui->result->resizeRowsToContents();
     ui->result->resizeColumnsToContents();
 }
-
-
