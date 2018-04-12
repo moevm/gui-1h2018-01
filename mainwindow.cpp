@@ -25,11 +25,15 @@ void MainWindow::on_save_clicked(){
 }
 
 
-void MainWindow::on_open_clicked(){//откроет последнее место куда были добавлены файлы
+void MainWindow::on_open_clicked(){
     QString str = QFileDialog::getOpenFileName(0, "Open Dialog", "", "*.txt *.tex");
     //в строке записан адрес файла на который я тыкнулв
 
-    system("notepad C:/Users/Olya/Desktop/first.tex");//если подавать вот так то откроет через командную строку не красиво но открооет
+    QByteArray tempStrVal;
+    tempStrVal = str.toUtf8();
+    char* ch_str = tempStrVal.data();
+
+    system(ch_str);//если подавать вот так то откроет через командную строку не красиво но открооет
 }
 
 void MainWindow::on_plus_clicked()
