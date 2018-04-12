@@ -304,6 +304,7 @@ void MainWindow::on_mult_clicked(){
             {
                 res = m1.multiply(m2.getValue(0,0));
                 show_result();
+                w.write_result("*",m1,m2,res);
             }
             else{
                 int l1 = m1.getColomns(), n2 = m2.getRows();
