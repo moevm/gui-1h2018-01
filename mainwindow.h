@@ -6,6 +6,7 @@
 #include <QMessageBox>
 #include <QDebug>
 #include "array.h"
+#include "writer.h"
 
 namespace Ui {
 class MainWindow;
@@ -31,6 +32,7 @@ private:
     Array res;
     Array m1_er;
     Array m2_er;
+    writer w;
     bool is_ok1=true;
     bool is_ok2=true;
     void read_matr1();
@@ -57,6 +59,7 @@ private slots:
     void matr2_characteristics_changed();
     //сохранение
     void on_save_clicked();
+    void on_open_clicked();
 };
 
 #endif // MAINWINDOW_H

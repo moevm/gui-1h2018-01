@@ -3,93 +3,108 @@
 #include <ctime>
 //написала для двух матриц пока и создала для текстового поток
 
-writer::writer()//в конструктор подадим путь пользователь когда нибудь
+writer::writer()//в конструкторе записывается в буфер заголовок для латеха
 {
-    time_t t;
-    tm *tk;
-    time(&t);
-    tk=localtime(&t);
-    QString p;
-    //пишем путь до файла tex
-    QString l = QString::number(tk->tm_hour).append("_").append(QString::number(tk->tm_min)).append("_")
-            .append(QString::number(tk->tm_mday)).append(".")
-            .append(QString::number(tk->tm_mon+1))
-            .append(".").append(QString::number(1900+tk->tm_year));
-    l.push_front("D:\\result\\");
-    p=l;
-    L_filename=l.append(".tex");
-    T_filename=p.append(".txt");
-    file_L.open(L_filename.toStdString(),std::ofstream::out | std::ofstream::app);//открываем поток для латеха
-    file_L<<"\\documentclass{article}\n";
-    file_L<<"\\usepackage{amsmath}\n";
-    file_L<<"\\begin{document}\n";
-    file_T.open(T_filename.toStdString(),std::ofstream::out | std::ofstream::app);//для текстового
+    QString str = "\\documentclass[14pt,a4paper]{scrartcl}\n";
+    str.append("\\usepackage{amsmath}\n").append("\\renewcommand{\\baselinestretch}{1.5}\n")
+            .append("\\begin{document}\n").append("\\noindent\n");
+    buf_lat.enqueue(str);
+}
+
+void  writer::setPath(QString path){
+    path.append("/");
+    L_filename = path;
+    T_filename = path;
 }
 
 inline void writer:: write_action(QString name, Array A, Array B, Array result){//вывод для действий с 2 матрицасм
-    file_L << "$\n"<<write_matr_to_lat(A).toStdString();
-    file_L << name.toStdString()<<"\n";
-    file_L << write_matr_to_lat(B).toStdString();
-    file_L << "=\n";
-    file_L << write_matr_to_lat(result).toStdString()<<"$\n\\\\\n";
-    file_T << "A =     " << write_matr_to_txt(A).toStdString() << "\n";
-    file_T << "B =     " << write_matr_to_txt(B).toStdString() << "\n";
-    file_T << "result = " << write_matr_to_txt(result).toStdString()<<"\n";
+    QString str_L = "$\n";
+    str_L.append(write_matr_to_lat(A));
+    str_L.append(name).append("\n");
+    str_L.append(write_matr_to_lat(B));
+    str_L.append("=\n");
+    str_L.append(write_matr_to_lat(result)).append("$\n\\\\\n");
+
+    buf_lat.enqueue(str_L);
+
+    QString str_T;
+    str_T.append("A =     ").append(write_matr_to_txt(A)).append("\n");
+    str_T.append("B =     ").append(write_matr_to_txt(B)).append("\n");
+    str_T.append("result = ").append(write_matr_to_txt(result)).append("\n");
+
+    buf_txt.enqueue(str_T);
 }
 
 
 inline void writer:: writeAction(QString name, Array A, Array result){//вывод длядействий с одной матрицы
-    file_L << "$\n"<<write_matr_to_lat(A).toStdString();
-    file_L << "^" << name.toStdString() << "\n";
-    file_L << "=\n";
-    file_L << write_matr_to_lat(result).toStdString()<<"$\n\\\\\n";
-    file_T << "M =     " << write_matr_to_txt(A).toStdString() << "\n";
-    file_T << "result = " << write_matr_to_txt(result).toStdString() << "\n";
+    QString str_L = "$\n";
+    str_L.append(write_matr_to_lat(A));
+    str_L.append("^").append(name).append("\n").append("=\n");
+    str_L.append(write_matr_to_lat(result)).append("$\n\\\\\n");
+
+    buf_lat.enqueue(str_L);
+
+    QString str_T;
+    str_T.append("M =     ").append(write_matr_to_txt(A)).append("\n");
+    str_T.append("result = ").append(write_matr_to_txt(result)).append("\n");
+
+    buf_txt.enqueue(str_T);
 }
 
 
 void writer:: writePow(int n, Array A, Array result){
     QString p = QString::number(n);
-    file_L << "$\n" << write_matr_to_lat(A).toStdString();
-    file_L << "^" << p.toStdString() << "\n";
-    file_L << "=\n";
-    file_L << write_matr_to_lat(result).toStdString()<<"$\n\\\\\n";
-    file_T << "Возведение матрицы в степень " << p.toStdString() << "\n";
-    file_T << "M =     " << write_matr_to_txt(A).toStdString() << "\n";
-    file_T << "result = " << write_matr_to_txt(result).toStdString() << "\n";
+
+    QString str_L = "$\n";
+    str_L.append(write_matr_to_lat(A));
+    str_L.append("^").append(p).append("\n");
+    str_L.append("=\n").append(write_matr_to_lat(result)).append("$\n\\\\\n");
+
+    buf_lat.enqueue(str_L);
+
+    QString str_T;
+    str_T.append("Возведение матрицы в степень ").append(p).append("\n");
+    str_T.append("M =     ").append(write_matr_to_txt(A)).append("\n");
+    str_T.append("result = ").append(write_matr_to_txt(result)).append("\n");
+
+    buf_txt.enqueue(str_T);
 }
 
 
 void writer::write_result(QString name, Array A, Array B,  Array result)//пока для 2 матриц и результата
 {
-//операция на 2 матрицы в латех
+ //операция на 2 матрицы в латех
     if (name == "{-1}"){
-        file_T << "Поиск обратной матрицы: \n";
+        buf_txt.enqueue("Поиск обратной матрицы: \n");
         writeAction(name, A, result);
     }
     if (name == "T"){
-        file_T << "Поиск транспонированой матрицы: \n";
+        buf_txt.enqueue("Поиск транспонированой матрицы: \n");
         writeAction(name, A, result);
     }
     if (name == "+"){
-        file_T << "Сложение двух матриц: \n";
+        buf_txt.enqueue("Сложение двух матриц: \n");
         write_action(name, A, B, result);
     }
     if (name == "*"){
-        file_T << "Умножение двух матриц: \n";
+        buf_txt.enqueue("Умножение двух матриц: \n");
         write_action(name, A, B,  result);
     }
     if (name == "-"){
-        file_T << "Вычитание двух матриц: \n";
+        buf_txt.enqueue("Вычитание двух матриц: \n");
         write_action(name, A, B, result);
     }
     if (name == "det"){
-        file_L << "$\n" << "det" << write_matr_to_lat(A).toStdString();
-        file_L << "=\n";
-        file_L << write_Det(result).toStdString()<<"$\n\\\\\n";
-        file_T << "Определитель матрицы:\n";
-        file_T << "M =     " << write_matr_to_txt(A).toStdString() << "\n";
-        file_T << "result = " << write_matr_to_txt(result).toStdString() << "\n";
+        QString str_L;
+        QString str_T;
+        str_L.append("$\n").append("det").append(write_matr_to_lat(A));
+        str_L.append("=\n").append(write_Det(result)).append("$\n\\\\\n");
+        str_T.append("Определитель матрицы:\n");
+        str_T.append("M =     ").append(write_matr_to_txt(A)).append("\n");
+        str_T.append("result = ").append(write_matr_to_txt(result)).append("\n");
+
+        buf_txt.enqueue(str_T);
+        buf_lat.enqueue(str_L);
     }
 
 }
@@ -110,7 +125,7 @@ QString writer::write_matr_to_lat(Array A){//запись матриц в лат
     return M;
 }
 
-QString writer::write_matr_to_txt(Array A){//запись матриц в латехе
+QString writer::write_matr_to_txt(Array A){//запись матриц в текстовый
     QString M;
     for(int i = 0; i < A.getRows(); i++)
     {
@@ -143,6 +158,7 @@ QString writer::write_Det(Array A){//запись матриц в латехе
 }
 
 QString writer::writeDet(Array A){//запись матриц в латехе
+
     QString M ="\\begin{vmatrix}\n";
     for(int i = 0; i < A.getRows(); i++)
     {
@@ -158,9 +174,44 @@ QString writer::writeDet(Array A){//запись матриц в латехе
     return M;
 }
 
-void writer::delete_files(){//пока эта штука для окончания работы с файлом
+void writer::save_files(){
+    buf_lat.enqueue("\\end{document}\n");
+//даем название файлу (время дата)
+    time_t t;
+    tm *tk;
+    time(&t);
+    tk=localtime(&t);
+    QString p;
+    QString l = QString::number(tk->tm_hour).append("_").append(QString::number(tk->tm_min)).append("_")
+            .append(QString::number(tk->tm_mday)).append(".")
+            .append(QString::number(tk->tm_mon+1))
+            .append(".").append(QString::number(1900+tk->tm_year));
+    p=l;
+    L_filename.append(l.append(".tex"));
+    T_filename.append(p.append(".txt"));
+    qDebug()<<L_filename;
+    //открываем поток
+    std::ofstream file_L;
+    std::ofstream file_T;
 
-    file_L<<"\\end{document}\n";
+    file_L.open(L_filename.toStdString(),std::ofstream::out | std::ofstream::app);//открываем поток для латеха
+    file_T.open(T_filename.toStdString(),std::ofstream::out | std::ofstream::app);//для текстового
+    //запись в поток
+    QString str = buf_lat.head();//заголовок латеха
+
+    while(!buf_lat.empty())
+    {
+        file_L<<buf_lat.dequeue().toStdString();
+    }
+    buf_lat.enqueue(str);//сохраняем заголовок латеха
+
+    while(!buf_txt.empty())
+    {
+        file_T<<buf_txt.dequeue().toStdString();
+
+    }
+    //закрываем поток
+
     file_L.close();
     file_T.close();
 

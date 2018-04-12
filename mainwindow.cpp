@@ -1,10 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "writer.h"
-#include <iostream>
+#include <QFileDialog>
 
 
-writer w;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -18,6 +16,20 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::on_save_clicked(){
+    QString str = QFileDialog::getExistingDirectory(0, "Directory Dialog", "");
+    w.setPath(str);
+    w.save_files();
+}
+
+
+void MainWindow::on_open_clicked(){//откроет последнее место куда были добавлены файлы
+    QString str = QFileDialog::getOpenFileName(0, "Open Dialog", "", "*.txt *.tex");
+    //в строке записан адрес файла на который я тыкнулв
+
+    system("notepad C:/Users/Olya/Desktop/first.tex");//если подавать вот так то откроет через командную строку не красиво но открооет
 }
 
 void MainWindow::on_plus_clicked()
@@ -38,6 +50,7 @@ void MainWindow::on_plus_clicked()
         }
     }
 }
+
 void MainWindow::show_result(){
     m = new QStandardItemModel;
     QStandardItem *item;
@@ -160,7 +173,7 @@ void MainWindow::on_powB_clicked(){
             int a = ui->num_powB->value();
             res = m2.elevate(a);
             show_result();
-            w.writePow(a, m1, res);
+            w.writePow(a, m2, res);
         }
     }
 }
@@ -194,7 +207,7 @@ void MainWindow::on_detB_clicked(){
             res.setSize(1, 1);
             res.setValue(0,0,m2.det());
             show_result();
-            w.write_result("det", m1, m2, res);
+            w.write_result("det", m2, m1, res);
         }
     }
 }
@@ -233,7 +246,7 @@ void MainWindow::on_reverseB_clicked(){
             }else{
                 res = m2.inverse();
                 show_result();
-                w.write_result("{-1}", m1, m2, res);
+                w.write_result("{-1}", m2, m1, res);
             }
 
         }
@@ -309,8 +322,6 @@ void MainWindow::on_mult_clicked(){
     }
 }
 
-
-
 void MainWindow::on_transpA_clicked(){
     clean_matr();
     read_matr1();
@@ -328,11 +339,8 @@ void MainWindow::on_transpB_clicked(){
     if(is_ok2){
         res = m2.transpose();
         show_result();
-        w.write_result("T", m1, m2, res);
+        w.write_result("T", m2, m1, res);
      }
-}
-void MainWindow::on_save_clicked(){//типо закончили работу и сохраняеи все дерьмо что наделали
-        w.delete_files();
 }
 
 void MainWindow::matr1_characteristics_changed()
