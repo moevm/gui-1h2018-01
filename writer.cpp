@@ -43,6 +43,7 @@ inline void writer:: write_action(QString name, Array A, Array B, Array result){
         str_L.append(write_matr_to_lat(B));
         str_L.append("=\n");
         str_L.append(write_matr_to_lat(result)).append("$\n\\\\\n");
+        buf_lat.enqueue(str_L);
     }
 
 
