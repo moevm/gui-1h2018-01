@@ -302,6 +302,7 @@ void MainWindow::on_mult_clicked(){
         {
                 res = m2.multiply(m1.getValue(0,0));
                 show_result();
+                w.write_result("*",m1,m2,res);
         }
         else{
             if((ui->col_2->value()==1)&&(ui->line_2->value()==1))
