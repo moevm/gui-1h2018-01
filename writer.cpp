@@ -19,34 +19,13 @@ void  writer::setPath(QString path){
 
 inline void writer:: write_action(QString name, Array A, Array B, Array result){//вывод для действий с 2 матрицасм
     QString str_L = "$\n";
-    if((A.getColomns() == 1) && (A.getRows() == 1)){
-        str_L.append(write_Det(A));
-        str_L.append(name).append("\n");
-        str_L.append(write_matr_to_lat(B));
-        str_L.append("=\n");
-        str_L.append(write_matr_to_lat(result)).append("$\n\\\\\n");
-
-        buf_lat.enqueue(str_L);
-    }
-    if((B.getColomns() == 1) && (B.getRows() == 1)){
-        str_L.append(write_matr_to_lat(A));
-        str_L.append(name).append("\n");
-        str_L.append(write_Det(B));
-        str_L.append("=\n");
-        str_L.append(write_matr_to_lat(result)).append("$\n\\\\\n");
-
-        buf_lat.enqueue(str_L);
-    }
-    if((A.getRows() != 1) && (A.getColomns() != 1)|| (B.getRows() != 1) && (B.getColomns() != 1)){
         str_L.append(write_matr_to_lat(A));
         str_L.append(name).append("\n");
         str_L.append(write_matr_to_lat(B));
         str_L.append("=\n");
         str_L.append(write_matr_to_lat(result)).append("$\n\\\\\n");
-        buf_lat.enqueue(str_L);
-    }
 
-
+    buf_lat.enqueue(str_L);
     QString str_T;
     str_T.append("A =     ").append(write_matr_to_txt(A)).append("\n");
     str_T.append("B =     ").append(write_matr_to_txt(B)).append("\n");
@@ -107,14 +86,9 @@ void writer::write_result(QString name, Array A, Array B,  Array result)//пок
         write_action(name, A, B, result);
     }
     if (name == "*"){
-        if((A.getRows() == 1) && (A.getColomns() == 1)|| (B.getRows() == 1) && (B.getColomns() == 1)){
-            buf_txt.enqueue("Умножение матрицы на число: \n");
-            write_action(name, A, B,  result);
-        }
-        else{
-            buf_txt.enqueue("Умножение двух матриц: \n");
-            write_action(name, A, B,  result);
-        }
+        buf_txt.enqueue("Умножение: \n");
+        write_action(name, A, B,  result);
+
     }
     if (name == "-"){
         buf_txt.enqueue("Вычитание двух матриц: \n");
