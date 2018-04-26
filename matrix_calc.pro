@@ -17,8 +17,12 @@ SOURCES += main.cpp\
     array.cpp \
     writer.cpp
 
+RC_FILE     = resources.rc
+
 HEADERS  += mainwindow.h \
     array.h \
     writer.h
 
 FORMS    += mainwindow.ui
+
+RESOURCES +=
