@@ -18,6 +18,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+
 void MainWindow::on_save_clicked(){
     QString str = QFileDialog::getExistingDirectory(0, "Directory Dialog", "");
     w.setPath(str);
@@ -302,7 +303,6 @@ void MainWindow::on_mult_clicked(){
         {
                 res = m2.multiply(m1.getValue(0,0));
                 show_result();
-                w.write_result("*",m1,m2,res);
         }
         else{
             if((ui->col_2->value()==1)&&(ui->line_2->value()==1))
@@ -399,7 +399,6 @@ void MainWindow::show_error(QString er, QString ev){
     msgBox.setIcon(QMessageBox::Critical);
     msgBox.setDefaultButton(QMessageBox::Ok);
     msgBox.exec();
-
     m = new QStandardItemModel;
     QStandardItem *item;
     item = new QStandardItem("Error");
@@ -407,4 +406,71 @@ void MainWindow::show_error(QString er, QString ev){
     ui->result->setModel(m);
     ui->result->resizeRowsToContents();
     ui->result->resizeColumnsToContents();
+}
+
+void MainWindow::on_save_toA_clicked(){
+    if(m->item(0,0)->text()=="Error")
+    {
+        QMessageBox msgBox;
+        msgBox.setText("Ошибка в полученном результате!");
+        msgBox.setInformativeText("Нечего сохранять в матрицу А.");
+        msgBox.setStandardButtons(QMessageBox::Ok);
+        msgBox.setIcon(QMessageBox::Critical);
+        msgBox.setDefaultButton(QMessageBox::Ok);
+        msgBox.exec();
+        return;
+    }
+    matr1 = new QStandardItemModel;
+    QStandardItem *item;
+    QString s;
+    int line = res.getRows();
+    int col = res.getColomns();
+    qDebug()<<res.getRows()<< res.getColomns();
+
+    for(int i = 0; i<line;i++)
+    {
+        for(int j = 0;j<col;j++ )
+        {
+                s.setNum(res.getValue(i,j));
+                item = new QStandardItem(s);
+                matr1->setItem(i, j, item);
+        }
+    }
+
+    ui->matr1->setModel(matr1);
+    ui->matr1->resizeRowsToContents();
+    ui->matr1->resizeColumnsToContents();
+}
+
+void MainWindow::on_save_toB_clicked(){
+    if(m->item(0,0)->text()=="Error")
+    {
+        QMessageBox msgBox;
+        msgBox.setText("Ошибка в полученном результате!");
+        msgBox.setInformativeText("Нечего сохранять в матрицу В.");
+        msgBox.setStandardButtons(QMessageBox::Ok);
+        msgBox.setIcon(QMessageBox::Critical);
+        msgBox.setDefaultButton(QMessageBox::Ok);
+        msgBox.exec();
+        return;
+    }
+    matr2 = new QStandardItemModel;
+    QStandardItem *item;
+    QString s;
+    int line = res.getRows();
+    int col = res.getColomns();
+
+    for(int i = 0; i<line;i++)
+    {
+        for(int j = 0;j<col;j++ )
+        {
+            s.setNum(res.getValue(i,j));
+            item = new QStandardItem(s);
+            matr2->setItem(i, j, item);
+        }
+    }
+
+    ui->matr2->setModel(matr2);
+    ui->matr2->resizeRowsToContents();
+    ui->matr2->resizeColumnsToContents();
 }

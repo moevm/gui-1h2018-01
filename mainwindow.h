@@ -41,6 +41,7 @@ private:
     void clean_matr();
     void show_error(QString er, QString ev);
 
+
 private slots:
     //кнопки операций
     void on_plus_clicked();
@@ -60,6 +61,9 @@ private slots:
     //сохранение
     void on_save_clicked();
     void on_open_clicked();
+    //запись в матрицы
+    void on_save_toA_clicked();
+    void on_save_toB_clicked();
 };
 
 #endif // MAINWINDOW_H
