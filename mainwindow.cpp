@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QFileDialog>
-
+#include <QDesktopServices>
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -22,19 +22,18 @@ MainWindow::~MainWindow()
 void MainWindow::on_save_clicked(){
     QString str = QFileDialog::getExistingDirectory(0, "Directory Dialog", "");
     w.setPath(str);
-    w.save_files();
+    if(ui->radioButton_2->isChecked())
+        w.save_files_to_lat();
+
+    if(ui->radioButton->isChecked())
+        w.save_files_to_txt();
 }
 
 
 void MainWindow::on_open_clicked(){
-    QString str = QFileDialog::getOpenFileName(0, "Open Dialog", "", "*.txt *.tex");
-    //в строке записан адрес файла на который я тыкнулв
+    QString str = QFileDialog::getOpenFileName(0, "Открыть файл", "", "Text Files (*.txt);;Latex Files (*.tex)");
+    QDesktopServices::openUrl(QUrl(QUrl::fromLocalFile(str)));
 
-    QByteArray tempStrVal;
-    tempStrVal = str.toUtf8();
-    char* ch_str = tempStrVal.data();
-
-    system(ch_str);//если подавать вот так то откроет через командную строку не красиво но открооет
 }
 
 void MainWindow::on_plus_clicked()
@@ -303,6 +302,7 @@ void MainWindow::on_mult_clicked(){
         {
                 res = m2.multiply(m1.getValue(0,0));
                 show_result();
+                w.write_result("*",m1,m2,res);
         }
         else{
             if((ui->col_2->value()==1)&&(ui->line_2->value()==1))
@@ -425,7 +425,9 @@ void MainWindow::on_save_toA_clicked(){
     QString s;
     int line = res.getRows();
     int col = res.getColomns();
-    qDebug()<<res.getRows()<< res.getColomns();
+
+    ui->col_1->setValue(col);
+    ui->line_1->setValue(line);
 
     for(int i = 0; i<line;i++)
     {
@@ -459,7 +461,8 @@ void MainWindow::on_save_toB_clicked(){
     QString s;
     int line = res.getRows();
     int col = res.getColomns();
-
+    ui->col_2->setValue(col);
+    ui->line_2->setValue(line);
     for(int i = 0; i<line;i++)
     {
         for(int j = 0;j<col;j++ )

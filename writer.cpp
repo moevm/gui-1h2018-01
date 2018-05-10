@@ -19,13 +19,15 @@ void  writer::setPath(QString path){
 
 inline void writer:: write_action(QString name, Array A, Array B, Array result){//вывод для действий с 2 матрицасм
     QString str_L = "$\n";
-        str_L.append(write_matr_to_lat(A));
-        str_L.append(name).append("\n");
-        str_L.append(write_matr_to_lat(B));
-        str_L.append("=\n");
-        str_L.append(write_matr_to_lat(result)).append("$\n\\\\\n");
+
+    str_L.append(write_matr_to_lat(A));
+    str_L.append(name).append("\n");
+    str_L.append(write_matr_to_lat(B));
+    str_L.append("=\n");
+    str_L.append(write_matr_to_lat(result)).append("$\n\\\\\n");
 
     buf_lat.enqueue(str_L);
+
     QString str_T;
     str_T.append("A =     ").append(write_matr_to_txt(A)).append("\n");
     str_T.append("B =     ").append(write_matr_to_txt(B)).append("\n");
@@ -86,9 +88,14 @@ void writer::write_result(QString name, Array A, Array B,  Array result)//пок
         write_action(name, A, B, result);
     }
     if (name == "*"){
-        buf_txt.enqueue("Умножение: \n");
-        write_action(name, A, B,  result);
-
+        if((A.getRows() == 1) && (A.getColomns() == 1)|| (B.getRows() == 1) && (B.getColomns() == 1)){
+            buf_txt.enqueue("Умножение матрицы на число: \n");
+            write_action(name, A, B,  result);
+        }
+        else{
+            buf_txt.enqueue("Умножение двух матриц: \n");
+            write_action(name, A, B,  result);
+        }
     }
     if (name == "-"){
         buf_txt.enqueue("Вычитание двух матриц: \n");
@@ -174,28 +181,49 @@ QString writer::writeDet(Array A){//запись матриц в латехе
     return M;
 }
 
-void writer::save_files(){
+void writer::save_files_to_txt(){
+//даем название файлу (время дата)
+    time_t t;
+    tm *tk;
+    time(&t);
+    tk=localtime(&t);
+    QString l = QString::number(tk->tm_hour).append("_").append(QString::number(tk->tm_min)).append("_")
+            .append(QString::number(tk->tm_mday)).append(".")
+            .append(QString::number(tk->tm_mon+1))
+            .append(".").append(QString::number(1900+tk->tm_year));
+    T_filename.append(l.append(".txt"));
+    //открываем поток
+    std::ofstream file_T;
+    file_T.open(T_filename.toStdString(),std::ofstream::out | std::ofstream::app);//для текстового
+
+    while(!buf_txt.empty())
+    {
+        file_T<<buf_txt.dequeue().toStdString();
+
+    }
+    //закрываем поток
+
+    file_T.close();
+}
+
+void writer::save_files_to_lat(){
     buf_lat.enqueue("\\end{document}\n");
 //даем название файлу (время дата)
     time_t t;
     tm *tk;
     time(&t);
     tk=localtime(&t);
-    QString p;
     QString l = QString::number(tk->tm_hour).append("_").append(QString::number(tk->tm_min)).append("_")
             .append(QString::number(tk->tm_mday)).append(".")
             .append(QString::number(tk->tm_mon+1))
             .append(".").append(QString::number(1900+tk->tm_year));
-    p=l;
+
     L_filename.append(l.append(".tex"));
-    T_filename.append(p.append(".txt"));
-    qDebug()<<L_filename;
+
     //открываем поток
     std::ofstream file_L;
-    std::ofstream file_T;
-
     file_L.open(L_filename.toStdString(),std::ofstream::out | std::ofstream::app);//открываем поток для латеха
-    file_T.open(T_filename.toStdString(),std::ofstream::out | std::ofstream::app);//для текстового
+
     //запись в поток
     QString str = buf_lat.head();//заголовок латеха
 
@@ -205,14 +233,8 @@ void writer::save_files(){
     }
     buf_lat.enqueue(str);//сохраняем заголовок латеха
 
-    while(!buf_txt.empty())
-    {
-        file_T<<buf_txt.dequeue().toStdString();
-
-    }
     //закрываем поток
 
     file_L.close();
-    file_T.close();
 
 }

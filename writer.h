@@ -16,8 +16,7 @@ private:
     QQueue <QString> buf_lat;
     QQueue <QString> buf_txt;
     QString user_path;
-    //QString str_L;
-    //QString str_T;
+
 
 
 
@@ -32,7 +31,8 @@ public:
     void writePow(int name, Array A, Array result);
     inline void write_action(QString name, Array A, Array B, Array result);
     inline void writeAction(QString name, Array A, Array result);
-    void save_files();
+    void save_files_to_txt();
+    void save_files_to_lat();
 
 };
 
